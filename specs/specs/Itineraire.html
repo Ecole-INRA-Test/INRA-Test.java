@@ -1,0 +1,31 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<link href="../concordion.css" rel="stylesheet" type="text/css"/>
+<head><title>Le calcul d'itinéraire du robot</title></head>
+<body>
+<h1>Calcul d'itinéraire du robot</h1>
+<p>
+    Le calcul d'itinéraire couple à la fois la gestion des mouvements (et plus particulièrement la partie <b>Déplacement
+    par coordonnée</b>) avec la gestion de l'énergie.
+</p>
+
+<p>
+    En effet, l'objectif est de pouvoir calculer l'itinéraire le moins coûteux en énergie afin que celui-ci soit
+    réalisable par le robot si possible sans avoir à s'arrêter.
+</p>
+
+<p>
+    Pour se faire, on a besoin d'avoir une cartographie précise du terrain qui se trouve autour du robot.
+    Le déplacement, quant à lui, ne peut pas, dans un premier temps, dépasser la zone connue
+    par le robot. Une fois arrivée à sa destination, il peut de nouveau connaitre la cartographie de ce qui l'entourre.
+</p>
+
+<h3>Caméra avancée</h3>
+
+<p>
+    La caméra avancée permet de cartographier en même temps que le robot se déplace afin de pouvoir mettre à jour en
+    temps réel la carte du robot. Ainsi, le calcul de l'itinéraire peut être revu en fonction des nouvelles informations.
+    Il est également possible de fournir des coordonnées en dehors de la zone prévue.
+</p>
+</body>
+</html>

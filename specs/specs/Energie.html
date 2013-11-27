@@ -1,0 +1,50 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<link href="../concordion.css" rel="stylesheet" type="text/css"/>
+<head><title>La gestion de l'énergie du robot</title></head>
+<body>
+
+<h1> Gestion de l'énergie</h1>
+<p>
+    Chaque mouvement réalisé par le robot lui coûte de l'énergie ce qui fait que ses batteries s'épuisent peu à peu.
+</p>
+
+<h3>Consommation de l'énergie</h3>
+
+<p>
+    La consommation en énergie du robot varie en fonction du terrain sur lequel il roule.
+    La liste suivante définit la consommation d'énergie du robot en fonction du terrain sur lequel il se déplace :
+</p>
+
+<table>
+    <tr ALIGN="CENTER">
+		<th>Terrain</th>
+		<th>Consommation d'énergie</th>
+	</tr>
+	<tr>
+		<td>Terre</td>
+		<td>1</td>
+	</tr>
+	<tr>
+		<td>Roche</td>
+		<td>2</td>
+	</tr>
+	<tr>
+		<td>Sable</td>
+		<td>4</td>
+	</tr>
+	<tr>
+		<td>Boue</td>
+		<td>3</td>
+	</tr>
+</table>
+
+<h3>Récupération de l'énergie</h3>
+
+<p>
+    Au cours du temps, les batteries du robot se rechargent grâce à des capteurs solaires. Ainsi, il récupère N unités
+    d'énergie chaque M temps (secondes ou autre à voir).
+</p>
+
+</body>
+</html>

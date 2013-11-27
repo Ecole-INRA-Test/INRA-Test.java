@@ -1,0 +1,41 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<link href="../concordion.css" rel="stylesheet" type="text/css"/>
+<head><title>Le robot</title></head>
+<body>
+
+<h1>Le Robot</h1>
+
+<p>
+    Ceci est la page principale de description des tests d'acceptations sur le robot.
+</p>
+
+<h1>Caractéristiques du robot</h1>
+
+<p>Le robot possède certaines spécificités :</p>
+<ul>
+    <li>Pour la gestion des <a href="Mouvement.html">déplacements</a></li>
+    <li>Pour la gestion de l'<a href="Energie.html">énergie</a></li>
+    <li>Pour la gestion de la <a href="Cartographie.html">cartographie</a> </li>
+</ul>
+
+<p>
+    Au départ, le robot se trouve en vol, il attérit à des coordonnées qui lui sont spécifiées. Ces coordonnées
+    correspondent ensuite à son point de départ pour toute action qu'il souhaite effectuer.
+</p>
+
+<h1>Fonctionnement du robot en condition réelle</h1>
+
+<p>
+    Lors du fonctionnement en condition réelle du robot, il est important de prendre en considération la surface
+    sur laquelle il doit se déplacer mais également le point qu'il doit atteindre. En effet, cela va intervenir dans
+    le calcul de l'itinéraire à suivre.
+
+    Ainsi, un autre module qui compose le robot est le <a href="Itineraire.html">calculateur d'itinéraire</a>.
+    Celui-ci couple à la fois la gestion de l'énergie et le déplacement du robot afin de déterminer quel itinéraire le
+    robot doit suivre pour consommer le moins d'énergie possible (le plus court chemin n'est pas forcément le moins
+    coûteux).
+</p>
+
+</body>
+</html>
