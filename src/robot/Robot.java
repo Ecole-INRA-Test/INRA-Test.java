@@ -12,26 +12,15 @@ public class Robot {
     private Direction direction;
     private boolean isLanded;
     private RoadBook roadBook;
-    private final double energyConsumption; // energie consommée pour la réalisation d'une action dans les conditions idéales
-    private LandSensor landSensor;
-    private Battery cells;
 
     public Robot() {
-        this(1.0, new Battery());
-    }
-
-    public Robot(double energyConsumption, Battery cells) {
         isLanded = false;
-        this.energyConsumption = energyConsumption;
-        this.cells = cells;
     }
 
-    public void land(Coordinates landPosition, LandSensor sensor) {
+    public void land(Coordinates landPosition) {
         position = landPosition;
         direction = NORTH;
         isLanded = true;
-        landSensor = sensor;
-        cells.setUp();
     }
 
     public int getXposition() throws UnlandedRobotException {
@@ -51,20 +40,12 @@ public class Robot {
 
     public void moveForward() throws UnlandedRobotException, InsufficientChargeException, LandSensorDefaillance, InaccessibleCoordinate {
         if (!isLanded) throw new UnlandedRobotException();
-        moveTo(MapTools.nextForwardPosition(position, direction));
+        position = MapTools.nextForwardPosition(position, direction);
     }
 
     public void moveBackward() throws UnlandedRobotException, InsufficientChargeException, LandSensorDefaillance, InaccessibleCoordinate {
         if (!isLanded) throw new UnlandedRobotException();
-        moveTo(MapTools.nextBackwardPosition(position, direction));
-    }
-
-    private void moveTo(Coordinates nextPosition) throws InsufficientChargeException, LandSensorDefaillance, InaccessibleCoordinate {
-        double neededEnergy = 0;
-            neededEnergy = landSensor.getPointToPointEnergyCoefficient(position, nextPosition) * energyConsumption;
-        if (!cells.canDeliver(neededEnergy)) throw new InsufficientChargeException();
-        cells.use(neededEnergy);
-        position = nextPosition;
+        position = MapTools.nextBackwardPosition(position, direction);
     }
 
     public void turnLeft() throws UnlandedRobotException {
