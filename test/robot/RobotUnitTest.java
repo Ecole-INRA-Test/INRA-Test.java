@@ -40,7 +40,7 @@ public class RobotUnitTest {
         int currentYposition = robot.getYposition();
         robot.moveForward();
         Assert.assertEquals(currentXposition, robot.getXposition());
-        Assert.assertEquals(currentYposition+1, robot.getYposition());
+        Assert.assertEquals(currentYposition-1, robot.getYposition());
 
     }
 
@@ -52,7 +52,7 @@ public class RobotUnitTest {
         int currentYposition = robot.getYposition();
         robot.moveBackward();
         Assert.assertEquals(currentXposition, robot.getXposition());
-        Assert.assertEquals(currentYposition-1, robot.getYposition());
+        Assert.assertEquals(currentYposition+1, robot.getYposition());
     }
 
     @Test
@@ -81,13 +81,11 @@ public class RobotUnitTest {
     @Test
     public void testFollowInstruction() throws Exception {
         Robot robot = new Robot();
-        LandSensor sensor = Mockito.mock(LandSensor.class);
-        when(sensor.getPointToPointEnergyCoefficient(any(Coordinates.class), any(Coordinates.class))).thenReturn(1.0);
         robot.land(new Coordinates(5, 7));
         robot.setRoadBook(new RoadBook(Arrays.asList(Instruction.FORWARD, Instruction.FORWARD, Instruction.TURNLEFT, Instruction.FORWARD)));
         robot.letsGo();
         Assert.assertEquals(4, robot.getXposition());
-        Assert.assertEquals(9, robot.getYposition());
+        Assert.assertEquals(5, robot.getYposition());
     }
 
     @Test (expected = UnlandedRobotException.class)
