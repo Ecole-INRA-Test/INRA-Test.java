@@ -38,12 +38,12 @@ public class Robot {
         return direction;
     }
 
-    public void moveForward() throws UnlandedRobotException, InsufficientChargeException, InaccessibleCoordinate {
+    public void moveForward() throws UnlandedRobotException, InsufficientChargeException {
         if (!isLanded) throw new UnlandedRobotException();
         position = nextForwardPosition(position, direction);
     }
 
-    public void moveBackward() throws UnlandedRobotException, InsufficientChargeException, InaccessibleCoordinate {
+    public void moveBackward() throws UnlandedRobotException, InsufficientChargeException {
         if (!isLanded) throw new UnlandedRobotException();
         position = nextBackwardPosition(position, direction);
     }
@@ -97,7 +97,7 @@ public class Robot {
         this.roadBook = roadBook;
     }
 
-    public void letsGo() throws UnlandedRobotException, UndefinedRoadbookException, InsufficientChargeException, InaccessibleCoordinate {
+    public void letsGo() throws UnlandedRobotException, UndefinedRoadbookException, InsufficientChargeException {
         if (roadBook == null) throw new UndefinedRoadbookException();
         while (roadBook.hasInstruction()) {
             Instruction nextInstruction = roadBook.next();
