@@ -1,10 +1,10 @@
 package robot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static robot.Direction.*;
 import static robot.Instruction.*;
-import static robot.RoadBookCalculator.calculateRoadBook;
 
 public class Robot {
 
@@ -12,26 +12,15 @@ public class Robot {
     private Direction direction;
     private boolean isLanded;
     private RoadBook roadBook;
-    private final double energyConsumption; // energie consommée pour la réalisation d'une action dans les conditions idéales
-    private LandSensor landSensor;
-    private Battery cells;
 
     public Robot() {
-        this(1.0, new Battery());
-    }
-
-    public Robot(double energyConsumption, Battery cells) {
         isLanded = false;
-        this.energyConsumption = energyConsumption;
-        this.cells = cells;
     }
 
-    public void land(Coordinates landPosition, LandSensor sensor) {
+    public void land(Coordinates landPosition) {
         position = landPosition;
         direction = NORTH;
         isLanded = true;
-        landSensor = sensor;
-        cells.setUp();
     }
 
     public int getXposition() throws UnlandedRobotException {
@@ -49,39 +38,66 @@ public class Robot {
         return direction;
     }
 
-    public void moveForward() throws UnlandedRobotException, InsufficientChargeException, LandSensorDefaillance, InaccessibleCoordinate {
+    public void moveForward() throws UnlandedRobotException, InsufficientChargeException {
         if (!isLanded) throw new UnlandedRobotException();
-        moveTo(MapTools.nextForwardPosition(position, direction));
+        position = nextForwardPosition(position, direction);
     }
 
-    public void moveBackward() throws UnlandedRobotException, InsufficientChargeException, LandSensorDefaillance, InaccessibleCoordinate {
+    public void moveBackward() throws UnlandedRobotException, InsufficientChargeException {
         if (!isLanded) throw new UnlandedRobotException();
-        moveTo(MapTools.nextBackwardPosition(position, direction));
-    }
-
-    private void moveTo(Coordinates nextPosition) throws InsufficientChargeException, LandSensorDefaillance, InaccessibleCoordinate {
-        double neededEnergy = 0;
-            neededEnergy = landSensor.getPointToPointEnergyCoefficient(position, nextPosition) * energyConsumption;
-        if (!cells.canDeliver(neededEnergy)) throw new InsufficientChargeException();
-        cells.use(neededEnergy);
-        position = nextPosition;
+        position = nextBackwardPosition(position, direction);
     }
 
     public void turnLeft() throws UnlandedRobotException {
         if (!isLanded) throw new UnlandedRobotException();
-        direction = MapTools.counterclockwise(direction);
+        direction = counterclockwise(direction);
     }
 
     public void turnRight() throws UnlandedRobotException {
         if (!isLanded) throw new UnlandedRobotException();
-        direction = MapTools.clockwise(direction);
+        direction = clockwise(direction);
     }
+
+    private static Coordinates nextForwardPosition(Coordinates position, Direction direction) {
+        if (direction == NORTH)
+            return new Coordinates(position.getX(), position.getY() - 1);
+        if (direction == SOUTH)
+            return new Coordinates(position.getX(), position.getY() + 1);
+        if (direction == EAST)
+            return new Coordinates(position.getX() + 1, position.getY());
+        return new Coordinates(position.getX() - 1, position.getY());
+    }
+
+    private static Coordinates nextBackwardPosition(Coordinates position, Direction direction) {
+        if (direction == NORTH)
+            return new Coordinates(position.getX(), position.getY() + 1);
+        if (direction == SOUTH)
+            return new Coordinates(position.getX(), position.getY() - 1);
+        if (direction == EAST)
+            return new Coordinates(position.getX() - 1, position.getY());
+        return new Coordinates(position.getX() + 1, position.getY());
+    }
+
+    private static Direction counterclockwise(Direction direction) {
+        if (direction == NORTH) return WEST;
+        if (direction == WEST) return SOUTH;
+        if (direction == SOUTH) return EAST;
+        return NORTH;
+    }
+
+    private static Direction clockwise(Direction direction) {
+        if (direction == NORTH) return EAST;
+        if (direction == EAST) return SOUTH;
+        if (direction == SOUTH) return WEST;
+        return NORTH;
+    }
+
 
     public void setRoadBook(RoadBook roadBook) {
         this.roadBook = roadBook;
     }
 
-    public void letsGo() throws UnlandedRobotException, UndefinedRoadbookException, InsufficientChargeException, LandSensorDefaillance, InaccessibleCoordinate {
+    public void letsGo() throws UnlandedRobotException, UndefinedRoadbookException, InsufficientChargeException {
         if (roadBook == null) throw new UndefinedRoadbookException();
         while (roadBook.hasInstruction()) {
             Instruction nextInstruction = roadBook.next();
@@ -95,6 +111,22 @@ public class Robot {
     public void computeRoadTo(Coordinates destination) throws UnlandedRobotException {
         if (!isLanded) throw new UnlandedRobotException();
         setRoadBook(calculateRoadBook(direction, position, destination, new ArrayList<Instruction>()));
+    }
+
+    private static RoadBook calculateRoadBook(Direction direction, Coordinates position, Coordinates destination, ArrayList<Instruction> instructions) {
+        List<Direction> directionList = new ArrayList<Direction>();
+        if (destination.getX() < position.getX()) directionList.add(WEST);
+        if (destination.getX() > position.getX()) directionList.add(Direction.EAST);
+        if (destination.getY() > position.getY()) directionList.add(Direction.SOUTH);
+        if (destination.getY() < position.getY()) directionList.add(Direction.NORTH);
+        if (directionList.isEmpty()) return new RoadBook(instructions);
+        if (directionList.contains(direction)) {
+            instructions.add(FORWARD);
+            return calculateRoadBook(direction, nextForwardPosition(position, direction), destination, instructions);
+        } else {
+            instructions.add(TURNRIGHT);
+            return calculateRoadBook(clockwise(direction), position, destination, instructions);
+        }
     }
 
 }
