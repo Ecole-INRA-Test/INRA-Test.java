@@ -80,7 +80,7 @@ public class RobotUnitTest {
     public void testMoveForwardWithEnergyConsumptionAndInsufficientCharge() throws Exception {
         Battery cells = Mockito.mock(Battery.class);
         Mockito.doThrow(new InsufficientChargeException()).doNothing().when(cells).use(anyDouble());
-        when(cells.timeToSufficientCharge(anyDouble())).thenReturn(0l);
+//        when(cells.timeToSufficientCharge(anyDouble())).thenReturn(0l);
         Robot robot = new Robot(2.0, cells);
         LandSensor sensor = Mockito.mock(LandSensor.class);
         when(sensor.getPointToPointEnergyCoefficient(any(Coordinates.class), any(Coordinates.class))).thenReturn(5.0,2.0,5.0,1.0);
