@@ -63,59 +63,42 @@ public class RobotUnitTest {
 
     @Test
     public void testTurnLeft() throws Exception {
-        Robot robot = new Robot();
-        robot.land(new Coordinates(3, 0));
-        robot.turnLeft();
-        Assert.assertEquals(WEST, robot.getDirection());
+        // TODO : complétez ce test
     }
 
     @Test
     public void testTurnRight() throws Exception {
-        Robot robot = new Robot();
-        robot.land(new Coordinates(3, 0));
-        robot.turnRight();
-        Assert.assertEquals(EAST, robot.getDirection());
+        // TODO : complétez ce test
     }
 
-    @Test (expected = UndefinedRoadbookException.class)
+    @Test
     public void testLetsGoWithoutRoadbook() throws Exception {
+        // TODO : complétez ce test
         Robot robot = new Robot();
         robot.land(new Coordinates(3, 0));
         robot.letsGo();
     }
 
     @Test
-    public void testFollowInstruction() throws Exception {
+    public void testLetsGo() throws Exception {
+        // TODO : complétez ce test
         Robot robot = new Robot();
         robot.land(new Coordinates(5, 7));
         robot.setRoadBook(new RoadBook(Arrays.asList(Instruction.FORWARD, Instruction.FORWARD, Instruction.TURNLEFT, Instruction.FORWARD)));
         robot.letsGo();
-        Assert.assertEquals(4, robot.getXposition());
-        Assert.assertEquals(5, robot.getYposition());
     }
 
     @Test (expected = UnlandedRobotException.class)
     public void testComputeRoadToWithUnlandedRobot() throws Exception {
         Robot robot = new Robot();
-        robot.computeRoadTo(new Coordinates(3, 5));
+        // TODO : complétez ce test
     }
 
     @Test
     public void testComputeRoadTo() throws UnlandedRobotException {
+        // TODO : complétez ce test
         Robot robot = new Robot();
         robot.land(new Coordinates(3, 0));
         robot.computeRoadTo(new Coordinates(7, 5));
-
-
-    }
-
-    @Test
-    public void testLetsTo() throws Exception {
-        Robot robot = new Robot();
-        robot.land(new Coordinates(3, 0));
-        robot.computeRoadTo(new Coordinates(0, -6));
-        robot.letsGo();
-        Assert.assertEquals(0, robot.getXposition());
-        Assert.assertEquals(-6, robot.getYposition());
     }
 }
