@@ -43,7 +43,7 @@ public class RobotUnitTest {
         int currentYposition = robot.getYposition();
         robot.moveForward();
         Assert.assertEquals(currentXposition, robot.getXposition());
-        Assert.assertEquals(currentYposition+1, robot.getYposition());
+        Assert.assertEquals(currentYposition-1, robot.getYposition());
 
     }
 
@@ -62,6 +62,7 @@ public class RobotUnitTest {
         //---DEFINE---
         Battery cells = Mockito.mock(Battery.class);
         Mockito.doNothing().when(cells).use(anyDouble());
+        Mockito.when(cells.canDeliver(anyDouble())).thenReturn(true);
         Robot robot = new Robot(2.0, cells);
         LandSensor sensor = Mockito.mock(LandSensor.class);
         when(sensor.getPointToPointEnergyCoefficient(any(Coordinates.class), any(Coordinates.class))).thenReturn(1.0,2.0,5.0,1.0);
@@ -72,11 +73,10 @@ public class RobotUnitTest {
 
         //---THEN---
         Assert.assertEquals(3, robot.getXposition());
-        Assert.assertEquals(1, robot.getYposition());
-        Mockito.verify(cells, never()).timeToSufficientCharge(anyDouble());
+        Assert.assertEquals(-1, robot.getYposition());
     }
 
-    @Test
+    @Test (expected = InsufficientChargeException.class)
     public void testMoveForwardWithEnergyConsumptionAndInsufficientCharge() throws Exception {
         Battery cells = Mockito.mock(Battery.class);
         Mockito.doThrow(new InsufficientChargeException()).doNothing().when(cells).use(anyDouble());
@@ -86,23 +86,6 @@ public class RobotUnitTest {
         when(sensor.getPointToPointEnergyCoefficient(any(Coordinates.class), any(Coordinates.class))).thenReturn(5.0,2.0,5.0,1.0);
         robot.land(new Coordinates(3,0), sensor);
         robot.moveForward();
-        Assert.assertEquals(3, robot.getXposition());
-        Assert.assertEquals(1, robot.getYposition());
-        Mockito.verify(cells, times(1)).timeToSufficientCharge(anyDouble());
-    }
-
-    // le même test que précédemment mais en utilisant une vraie Battery
-    // Il est plus lent (le thread s'endord pour attendre que la Battery soit suffisamment chargée),
-    // présente le risque d'échouer à cause de la classe Battery
-    @Test
-    public void testMoveForwardWithEnergyConsumptionAndInsufficientCharge2() throws Exception {
-        Robot robot = new Robot(34.0, new Battery());
-        LandSensor sensor = Mockito.mock(LandSensor.class);
-        when(sensor.getPointToPointEnergyCoefficient(any(Coordinates.class), any(Coordinates.class))).thenReturn(5.0,2.0,5.0,1.0);
-        robot.land(new Coordinates(3,0), sensor);
-        robot.moveForward();
-        Assert.assertEquals(3, robot.getXposition());
-        Assert.assertEquals(1, robot.getYposition());
     }
 
     @Test
@@ -113,7 +96,7 @@ public class RobotUnitTest {
         int currentYposition = robot.getYposition();
         robot.moveBackward();
         Assert.assertEquals(currentXposition, robot.getXposition());
-        Assert.assertEquals(currentYposition-1, robot.getYposition());
+        Assert.assertEquals(currentYposition+1, robot.getYposition());
     }
 
     @Test
@@ -148,7 +131,7 @@ public class RobotUnitTest {
         robot.setRoadBook(new RoadBook(Arrays.asList(Instruction.FORWARD, Instruction.FORWARD, Instruction.TURNLEFT, Instruction.FORWARD)));
         robot.letsGo();
         Assert.assertEquals(4, robot.getXposition());
-        Assert.assertEquals(9, robot.getYposition());
+        Assert.assertEquals(5, robot.getYposition());
     }
 
     @Test (expected = UnlandedRobotException.class)

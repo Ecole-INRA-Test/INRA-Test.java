@@ -11,14 +11,14 @@ public class MapToolsUnitTest {
     public void testNextForwardPositionNorth() {
         Coordinates position = MapTools.nextForwardPosition(new Coordinates(0, 0), NORTH);
         Assert.assertEquals(0, position.getX());
-        Assert.assertEquals(1, position.getY());
+        Assert.assertEquals(-1, position.getY());
     }
 
     @Test
     public void testNextForwardPositionSouth() {
         Coordinates position = MapTools.nextForwardPosition(new Coordinates(0, 0), SOUTH);
         Assert.assertEquals(0, position.getX());
-        Assert.assertEquals(-1, position.getY());
+        Assert.assertEquals(1, position.getY());
     }
 
     @Test
@@ -39,14 +39,14 @@ public class MapToolsUnitTest {
     public void testNextBackwardPositionNorth() {
         Coordinates position = MapTools.nextBackwardPosition(new Coordinates(0, 0), NORTH);
         Assert.assertEquals(0, position.getX());
-        Assert.assertEquals(-1, position.getY());
+        Assert.assertEquals(1, position.getY());
     }
 
     @Test
     public void testNextBackwardPositionSouth() {
         Coordinates position = MapTools.nextBackwardPosition(new Coordinates(0, 0), SOUTH);
         Assert.assertEquals(0, position.getX());
-        Assert.assertEquals(1, position.getY());
+        Assert.assertEquals(-1, position.getY());
     }
 
     @Test

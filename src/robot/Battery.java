@@ -7,8 +7,8 @@ import java.util.TimerTask;
 
 public class Battery {
 
-    private final long CHARGE_TOP = 1000;
-    private final long CHARGE_STEP = 10;
+    public final long CHARGE_TOP = 1000;
+    public final long CHARGE_STEP = 10;
     private float chargeLevel;
 
     public Battery() {
