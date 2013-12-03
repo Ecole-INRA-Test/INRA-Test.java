@@ -147,5 +147,27 @@ public class RoadBookCalculatorUnitTest {
             System.out.println(book.next().toString());
         }
     }
-
+    @Test
+    public void testRouteCulDeSac() throws LandSensorDefaillance, UndefinedRoadbookException {
+        LandSensor sensor = mock(LandSensor.class);
+        when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(1,-6))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(0,-5))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(2,-5))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(0,-4))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(2,-4))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(0,-3))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(2,-3))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(0,-2))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(2,-2))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(0,-1))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(2,-1))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(0,0))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(2,0))).thenReturn(false);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions);
+        while (book.hasInstruction()) {
+            System.out.println(book.next().toString());
+        }
     }
+
+}
