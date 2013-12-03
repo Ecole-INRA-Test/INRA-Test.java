@@ -4,9 +4,13 @@ import apple.laf.JRSUIConstants;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static robot.Direction.*;
 import static robot.RoadBookCalculator.calculateRoadBook;
 
@@ -110,5 +114,38 @@ public class RoadBookCalculatorUnitTest {
         Assert.assertFalse(book.hasInstruction());
     }
 
+    @Test
+    public void test() throws LandSensorDefaillance, InaccessibleCoordinate, UndefinedRoadbookException {
+        LandSensor sensor = Mockito.mock(LandSensor.class);
+ //       when(sensor.getPointToPointEnergyCoefficient(startPosition, new Coordinates(1, 2))).thenThrow(new InaccessibleCoordinate(new Coordinates(1,2)));
+        when(sensor.getPointToPointEnergyCoefficient(any(Coordinates.class), any(Coordinates.class))).thenReturn(1.0);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,5), instructions);
+    }
 
-}
+    @Test
+    public void testRouteSimple1() throws LandSensorDefaillance, UndefinedRoadbookException {
+        LandSensor sensor = mock(LandSensor.class);
+        when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(1,0))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(3, 1))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(2,-3))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(2,-3))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(5,-2))).thenReturn(false);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions);
+        while (book.hasInstruction()) {
+            System.out.println(book.next().toString());
+        }
+    }
+    @Test
+    public void testRouteSimple2() throws LandSensorDefaillance, UndefinedRoadbookException {
+        LandSensor sensor = mock(LandSensor.class);
+        when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(1,0))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(5,-2))).thenReturn(false);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions);
+        while (book.hasInstruction()) {
+            System.out.println(book.next().toString());
+        }
+    }
+
+    }

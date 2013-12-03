@@ -16,10 +16,6 @@ public class Robot {
     private LandSensor landSensor;
     private Battery cells;
 
-    public Robot() {
-        this(1.0, new Battery());
-    }
-
     public Robot(double energyConsumption, Battery cells) {
         isLanded = false;
         this.energyConsumption = energyConsumption;
@@ -60,21 +56,26 @@ public class Robot {
     }
 
     private void moveTo(Coordinates nextPosition) throws InsufficientChargeException, LandSensorDefaillance, InaccessibleCoordinate {
-        double neededEnergy = 0;
-            neededEnergy = landSensor.getPointToPointEnergyCoefficient(position, nextPosition) * energyConsumption;
+        double neededEnergy;
+        neededEnergy = landSensor.getPointToPointEnergyCoefficient(position, nextPosition) * energyConsumption;
         if (!cells.canDeliver(neededEnergy)) throw new InsufficientChargeException();
         cells.use(neededEnergy);
         position = nextPosition;
     }
 
-    public void turnLeft() throws UnlandedRobotException {
-        if (!isLanded) throw new UnlandedRobotException();
-        direction = MapTools.counterclockwise(direction);
+    public void turnLeft() throws UnlandedRobotException, InsufficientChargeException {
+        turnTo(MapTools.counterclockwise(direction));
     }
 
-    public void turnRight() throws UnlandedRobotException {
+    public void turnRight() throws UnlandedRobotException, InsufficientChargeException {
+        turnTo(MapTools.clockwise(direction));
+    }
+
+    private void turnTo(Direction newDirection) throws UnlandedRobotException, InsufficientChargeException {
         if (!isLanded) throw new UnlandedRobotException();
-        direction = MapTools.clockwise(direction);
+        if (!cells.canDeliver(energyConsumption)) throw new InsufficientChargeException();
+        cells.use(energyConsumption);
+        direction = newDirection;
     }
 
     public void setRoadBook(RoadBook roadBook) {

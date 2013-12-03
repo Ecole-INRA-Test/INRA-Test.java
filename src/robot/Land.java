@@ -22,7 +22,7 @@ public enum Land {
         throw new TerrainNonRepertorieException();
     }
 
-    public static int CountLand() {
+    public static int countLand() {
         return Land.values().length;
     }
 }
