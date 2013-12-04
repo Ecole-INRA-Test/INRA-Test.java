@@ -103,10 +103,9 @@ public class Explorer {
                         System.out.println("Impossible d'établir une route, la destination est inatteignable");
                     }
                     try {
-                        List<Pair<Coordinates,Direction>> route = robot.letsGo();
-                        for (Pair<Coordinates, Direction> point : route) {
-
-                        System.out.println("Position : (" + point.fst.getX() + " ," + point.fst.getY() + ") - orientation : " + point.snd);
+                        List<CheckPoint> checkPoints = robot.letsGo();
+                        for (CheckPoint point : checkPoints) {
+                        System.out.println("Position : (" + point.position.getX() + " ," + point.position.getY() + ") - orientation : " + point.direction);
                         }
                     } catch (UnlandedRobotException e) {
                         System.out.println("Le robot est encore en l'air, il doit se poser d'abord");
@@ -114,6 +113,7 @@ public class Explorer {
                         System.out.println("Il semblerait que le road book soit manquant");
                     } catch (InsufficientChargeException e) {
                         System.out.println("Désolé, je n'ai pas suffisamment d'énergie pour terminer mon parcours");
+                        displayBlackBox(robot.blackBox);
                     } catch (LandSensorDefaillance landSensorDefaillance) {
                         System.out.println("Allo Houston, on a un problème. On a perdu le retour sol");
                     } catch (InaccessibleCoordinate inaccessibleCoordinate) {
@@ -126,6 +126,13 @@ public class Explorer {
         }
 
 
+    }
+
+    private static void displayBlackBox(BlackBox blackBox) {
+        System.out.println("Contenu de la boite noire");
+        for (CheckPoint point : blackBox.getCheckPointList()) {
+            System.out.println("Position : (" + point.position.getX() + " ," + point.position.getY() + ") - orientation : " + point.direction +" mode commande : "+ (point.manualDirective?"manuel":"automatique"));
+        }
     }
 
     private static void displayMenu() {

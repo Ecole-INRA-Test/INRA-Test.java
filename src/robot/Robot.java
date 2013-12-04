@@ -17,12 +17,14 @@ public class Robot {
     private RoadBook roadBook;
     private final double energyConsumption; // energie consommée pour la réalisation d'une action dans les conditions idéales
     private LandSensor landSensor;
+    public final BlackBox blackBox;
     private Battery cells;
 
     public Robot(double energyConsumption, Battery cells) {
         isLanded = false;
         this.energyConsumption = energyConsumption;
         this.cells = cells;
+        blackBox = new BlackBox();
     }
 
     public void land(Coordinates landPosition, LandSensor sensor) {
@@ -31,6 +33,7 @@ public class Robot {
         isLanded = true;
         landSensor = sensor;
         cells.setUp();
+        blackBox.addCheckPoint(position, direction, true);
     }
 
     public int getXposition() throws UnlandedRobotException {
@@ -64,6 +67,7 @@ public class Robot {
         if (!cells.canDeliver(neededEnergy)) throw new InsufficientChargeException();
         cells.use(neededEnergy);
         position = nextPosition;
+        blackBox.addCheckPoint(position, direction, true);
     }
 
     public void turnLeft() throws UnlandedRobotException, InsufficientChargeException {
@@ -79,22 +83,25 @@ public class Robot {
         if (!cells.canDeliver(energyConsumption)) throw new InsufficientChargeException();
         cells.use(energyConsumption);
         direction = newDirection;
+        blackBox.addCheckPoint(position, direction, true);
     }
 
     public void setRoadBook(RoadBook roadBook) {
         this.roadBook = roadBook;
     }
 
-    public List<Pair<Coordinates, Direction>> letsGo() throws UnlandedRobotException, UndefinedRoadbookException, InsufficientChargeException, LandSensorDefaillance, InaccessibleCoordinate {
+    public List<CheckPoint> letsGo() throws UnlandedRobotException, UndefinedRoadbookException, InsufficientChargeException, LandSensorDefaillance, InaccessibleCoordinate {
         if (roadBook == null) throw new UndefinedRoadbookException();
-        List<Pair<Coordinates,Direction>> mouchard = new ArrayList<Pair<Coordinates, Direction>>();
+        List<CheckPoint> mouchard = new ArrayList<CheckPoint>();
         while (roadBook.hasInstruction()) {
             Instruction nextInstruction = roadBook.next();
             if (nextInstruction == FORWARD) moveForward();
             else if (nextInstruction == BACKWARD) moveBackward();
             else if (nextInstruction == TURNLEFT) turnLeft();
             else if (nextInstruction == TURNRIGHT) turnRight();
-            mouchard.add(new Pair<Coordinates, Direction>(position, direction));
+            CheckPoint checkPoint = new CheckPoint(position, direction, true);
+            mouchard.add(checkPoint);
+            blackBox.addCheckPoint(checkPoint);
         }
         return mouchard;
     }

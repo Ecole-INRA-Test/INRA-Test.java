@@ -5,6 +5,5 @@ public enum Instruction {
     TURNLEFT,
     BACKWARD,
     TURNRIGHT,
-    FORWARD,
-    TAG
+    FORWARD
 }
