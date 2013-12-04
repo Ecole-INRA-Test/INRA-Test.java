@@ -1,5 +1,8 @@
 package robot;
 
+import com.sun.tools.javac.util.Pair;
+
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -12,7 +15,7 @@ import java.util.Scanner;
  */
 public class Explorer {
     public static void main(String[] args) {
-        System.out.println("Consomation de base du robot d'exploration ");
+        System.out.println("Consommation de base du robot d'exploration ");
         Scanner scanner = new Scanner(System.in);
         double energy = scanner.nextDouble();
         Robot robot = new Robot(energy, new Battery());
@@ -28,10 +31,16 @@ public class Explorer {
                     int x = scanner.nextInt();
                     int y = scanner.nextInt();
                     robot.land(new Coordinates(x,y), new LandSensor(new Random()));
+                    try {
+                        System.out.println("Position actuelle : ("+robot.getXposition()+" ,"+robot.getYposition()+") - orientation : "+robot.getDirection());
+                    } catch (UnlandedRobotException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
                     break;
                 case 'Z' :
                     try {
                         robot.moveForward();
+                        System.out.println("Position actuelle : (" + robot.getXposition() + " ," + robot.getYposition() + ") - orientation : " + robot.getDirection());
                     } catch (UnlandedRobotException e) {
                         System.out.println("Le robot est encore en l'air, il doit se poser d'abord");
                     } catch (InsufficientChargeException e) {
@@ -46,6 +55,7 @@ public class Explorer {
                 case 'S' :
                     try {
                         robot.moveBackward();
+                        System.out.println("Position actuelle : (" + robot.getXposition() + " ," + robot.getYposition() + ") - orientation : " + robot.getDirection());
                     } catch (UnlandedRobotException e) {
                         System.out.println("Le robot est encore en l'air, il doit se poser d'abord");
                     } catch (InsufficientChargeException e) {
@@ -54,12 +64,13 @@ public class Explorer {
                         System.out.println("Aie, le module de détection du terrain est défaillant. Abandon de l'exploration");
                         throw new RuntimeException(landSensorDefaillance);
                     } catch (InaccessibleCoordinate inaccessibleCoordinate) {
-                        System.out.println("le terrain devant le robot n'est pas praticable");
+                        System.out.println("le terrain derrière le robot n'est pas praticable");
                     }
                     break;
                 case 'Q' :
                     try {
                         robot.turnLeft();
+                        System.out.println("Position actuelle : (" + robot.getXposition() + " ," + robot.getYposition() + ") - orientation : " + robot.getDirection());
                     } catch (UnlandedRobotException e) {
                         System.out.println("Le robot est encore en l'air, il doit se poser d'abord");
                     } catch (InsufficientChargeException e) {
@@ -69,6 +80,7 @@ public class Explorer {
                 case 'D' :
                     try {
                         robot.turnRight();
+                        System.out.println("Position actuelle : (" + robot.getXposition() + " ," + robot.getYposition() + ") - orientation : " + robot.getDirection());
                     } catch (UnlandedRobotException e) {
                         System.out.println("Le robot est encore en l'air, il doit se poser d'abord");
                     } catch (InsufficientChargeException e) {
@@ -82,20 +94,30 @@ public class Explorer {
                     try {
                         robot.computeRoadTo(new Coordinates(destx, desty));
                     } catch (UnlandedRobotException e) {
-                        System.out.println("Le robot est encore en l'air, il doit se poser d'abord");
+                        System.out.println("Impossible d'établir une route, le robot est encore en l'air");
+                        break;
+                    } catch (LandSensorDefaillance landSensorDefaillance) {
+                        System.out.println("Allo Houston, on a un problème. On a perdu le retour sol");
+                        break;
+                    } catch (UndefinedRoadbookException e) {
+                        System.out.println("Impossible d'établir une route, la destination est inatteignable");
                     }
                     try {
-                        robot.letsGo();
+                        List<Pair<Coordinates,Direction>> route = robot.letsGo();
+                        for (Pair<Coordinates, Direction> point : route) {
+
+                        System.out.println("Position : (" + point.fst.getX() + " ," + point.fst.getY() + ") - orientation : " + point.snd);
+                        }
                     } catch (UnlandedRobotException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        System.out.println("Le robot est encore en l'air, il doit se poser d'abord");
                     } catch (UndefinedRoadbookException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        System.out.println("Il semblerait que le road book soit manquant");
                     } catch (InsufficientChargeException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        System.out.println("Désolé, je n'ai pas suffisamment d'énergie pour terminer mon parcours");
                     } catch (LandSensorDefaillance landSensorDefaillance) {
-                        landSensorDefaillance.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        System.out.println("Allo Houston, on a un problème. On a perdu le retour sol");
                     } catch (InaccessibleCoordinate inaccessibleCoordinate) {
-                        inaccessibleCoordinate.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        System.out.println("Je suis malheureusement dans l'impossibilité de rejoindre la destination demandée");
                     }
 
             }

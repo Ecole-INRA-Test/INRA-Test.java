@@ -1,6 +1,9 @@
 package robot;
 
+import com.sun.tools.javac.util.Pair;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import static robot.Direction.*;
 import static robot.Instruction.*;
@@ -82,20 +85,23 @@ public class Robot {
         this.roadBook = roadBook;
     }
 
-    public void letsGo() throws UnlandedRobotException, UndefinedRoadbookException, InsufficientChargeException, LandSensorDefaillance, InaccessibleCoordinate {
+    public List<Pair<Coordinates, Direction>> letsGo() throws UnlandedRobotException, UndefinedRoadbookException, InsufficientChargeException, LandSensorDefaillance, InaccessibleCoordinate {
         if (roadBook == null) throw new UndefinedRoadbookException();
+        List<Pair<Coordinates,Direction>> mouchard = new ArrayList<Pair<Coordinates, Direction>>();
         while (roadBook.hasInstruction()) {
             Instruction nextInstruction = roadBook.next();
             if (nextInstruction == FORWARD) moveForward();
             else if (nextInstruction == BACKWARD) moveBackward();
             else if (nextInstruction == TURNLEFT) turnLeft();
             else if (nextInstruction == TURNRIGHT) turnRight();
+            mouchard.add(new Pair<Coordinates, Direction>(position, direction));
         }
+        return mouchard;
     }
 
-    public void computeRoadTo(Coordinates destination) throws UnlandedRobotException {
+    public void computeRoadTo(Coordinates destination) throws UnlandedRobotException, LandSensorDefaillance, UndefinedRoadbookException {
         if (!isLanded) throw new UnlandedRobotException();
-        setRoadBook(calculateRoadBook(direction, position, destination, new ArrayList<Instruction>()));
+        setRoadBook(calculateRoadBook(landSensor, direction, position, destination, new ArrayList<Instruction>()));
     }
 
 }

@@ -41,7 +41,6 @@ public class RoadBookCalculator {
                 try {
                     directionsToExplored.remove(direction);
                     directionList.remove(direction);
-                    //instructions.add(TAG);
                     instructions.add(FORWARD);
                     return calculateRoadBook(sensor, direction, nextForwardPosition(position, direction), destination, instructions);
                 } catch (UndefinedRoadbookException e) {
