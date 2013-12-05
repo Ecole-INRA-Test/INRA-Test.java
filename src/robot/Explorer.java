@@ -19,25 +19,25 @@ public class Explorer {
         Scanner scanner = new Scanner(System.in);
         double energy = scanner.nextDouble();
         Robot robot = new Robot(energy, new Battery());
-        while(true){
+        while (true) {
             displayMenu();
             String commande;
             do {
                 commande = scanner.nextLine();
-            }while (commande.length()!=1);
+            } while (commande.length() != 1);
             switch (commande.charAt(0)) {
-                case 'A' :
+                case 'A':
                     System.out.println("coordonnées x,y de dépose du robot");
                     int x = scanner.nextInt();
                     int y = scanner.nextInt();
-                    robot.land(new Coordinates(x,y), new LandSensor(new Random()));
+                    robot.land(new Coordinates(x, y), new LandSensor(new Random(10)));
                     try {
-                        System.out.println("Position actuelle : ("+robot.getXposition()+" ,"+robot.getYposition()+") - orientation : "+robot.getDirection());
+                        System.out.println("Position actuelle : (" + robot.getXposition() + " ," + robot.getYposition() + ") - orientation : " + robot.getDirection());
                     } catch (UnlandedRobotException e) {
                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     }
                     break;
-                case 'Z' :
+                case 'Z':
                     try {
                         robot.moveForward();
                         System.out.println("Position actuelle : (" + robot.getXposition() + " ," + robot.getYposition() + ") - orientation : " + robot.getDirection());
@@ -52,7 +52,7 @@ public class Explorer {
                         System.out.println("le terrain devant le robot n'est pas praticable");
                     }
                     break;
-                case 'S' :
+                case 'S':
                     try {
                         robot.moveBackward();
                         System.out.println("Position actuelle : (" + robot.getXposition() + " ," + robot.getYposition() + ") - orientation : " + robot.getDirection());
@@ -67,7 +67,7 @@ public class Explorer {
                         System.out.println("le terrain derrière le robot n'est pas praticable");
                     }
                     break;
-                case 'Q' :
+                case 'Q':
                     try {
                         robot.turnLeft();
                         System.out.println("Position actuelle : (" + robot.getXposition() + " ," + robot.getYposition() + ") - orientation : " + robot.getDirection());
@@ -77,7 +77,7 @@ public class Explorer {
                         System.out.println("Oups, piles vides... soyez patient, le soleil fait son oeuvre");
                     }
                     break;
-                case 'D' :
+                case 'D':
                     try {
                         robot.turnRight();
                         System.out.println("Position actuelle : (" + robot.getXposition() + " ," + robot.getYposition() + ") - orientation : " + robot.getDirection());
@@ -87,7 +87,7 @@ public class Explorer {
                         System.out.println("Oups, piles vides... soyez patient, le soleil fait son oeuvre");
                     }
                     break;
-                case 'M' :
+                case 'M':
                     System.out.println("coordonnées x,y de la destination");
                     int destx = scanner.nextInt();
                     int desty = scanner.nextInt();
@@ -105,7 +105,7 @@ public class Explorer {
                     try {
                         List<CheckPoint> checkPoints = robot.letsGo();
                         for (CheckPoint point : checkPoints) {
-                        System.out.println("Position : (" + point.position.getX() + " ," + point.position.getY() + ") - orientation : " + point.direction);
+                            System.out.println("Position : (" + point.position.getX() + " ," + point.position.getY() + ") - orientation : " + point.direction);
                         }
                     } catch (UnlandedRobotException e) {
                         System.out.println("Le robot est encore en l'air, il doit se poser d'abord");
@@ -119,19 +119,14 @@ public class Explorer {
                     } catch (InaccessibleCoordinate inaccessibleCoordinate) {
                         System.out.println("Je suis malheureusement dans l'impossibilité de rejoindre la destination demandée");
                     }
-
             }
-
-
         }
-
-
     }
 
     private static void displayBlackBox(BlackBox blackBox) {
         System.out.println("Contenu de la boite noire");
         for (CheckPoint point : blackBox.getCheckPointList()) {
-            System.out.println("Position : (" + point.position.getX() + " ," + point.position.getY() + ") - orientation : " + point.direction +" mode commande : "+ (point.manualDirective?"manuel":"automatique"));
+            System.out.println("Position : (" + point.position.getX() + " ," + point.position.getY() + ") - orientation : " + point.direction + " mode commande : " + (point.manualDirective ? "manuel" : "automatique"));
         }
     }
 

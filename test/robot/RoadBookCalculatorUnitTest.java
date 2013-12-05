@@ -170,4 +170,50 @@ public class RoadBookCalculatorUnitTest {
         }
     }
 
+    @Test
+    public void testArriveeInaccessible() throws LandSensorDefaillance, UndefinedRoadbookException {
+        LandSensor sensor = mock(LandSensor.class);
+        when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(5,-5))).thenReturn(false);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions);
+        while (book.hasInstruction()) {
+            System.out.println(book.next().toString());
+        }
+    }
+
+    @Test
+    public void testArriveeIsolee() throws LandSensorDefaillance, UndefinedRoadbookException {
+        LandSensor sensor = mock(LandSensor.class);
+        when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(5,-4))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(4,-4))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(6,-4))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(4,-5))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(6,-5))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(4,-6))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(5,-6))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(6,-6))).thenReturn(false);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions);
+        while (book.hasInstruction()) {
+            System.out.println(book.next().toString());
+        }
+    }
+
+    @Test (expected = LandSensorDefaillance.class)
+    public void testPanneDeSensor() throws LandSensorDefaillance, UndefinedRoadbookException {
+        LandSensor sensor = mock(LandSensor.class);
+        when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(5,-4))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(4,-4))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(6,-4))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(4,-5))).thenThrow(LandSensorDefaillance.class);
+        when(sensor.isAccessible(new Coordinates(6,-5))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(4,-6))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(5,-6))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(6,-6))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(5,-5))).thenReturn(false);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions);
+
+    }
+
 }

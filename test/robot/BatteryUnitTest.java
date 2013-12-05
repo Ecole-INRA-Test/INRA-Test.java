@@ -35,4 +35,11 @@ public class BatteryUnitTest {
         cell.use(cell.getChargeLevel());
         Assert.assertEquals(0f, cell.getChargeLevel());
     }
+
+    @Test
+    public void testCanDeliver() {
+        Battery cell = new Battery();
+        Assert.assertTrue(cell.canDeliver(25));
+        Assert.assertFalse(cell.canDeliver(200));
+    }
 }

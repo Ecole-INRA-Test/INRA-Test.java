@@ -5,7 +5,6 @@ import java.util.*;
 import static robot.Direction.*;
 import static robot.Instruction.*;
 import static robot.MapTools.clockwise;
-import static robot.MapTools.counterclockwise;
 import static robot.MapTools.nextForwardPosition;
 
 public class RoadBookCalculator {
@@ -27,7 +26,7 @@ public class RoadBookCalculator {
     }
 
     static RoadBook calculateRoadBook(LandSensor sensor, Direction direction, Coordinates position, Coordinates destination, ArrayList<Instruction> instructions) throws LandSensorDefaillance, UndefinedRoadbookException {
-        if (position.equals(destination)) return new RoadBook(instructions);
+        if (position.equals(destination)) return new RoadBook(InstructionListTool.compacte(instructions));
         List<Direction> directionList = new ArrayList<Direction>();
         if (destination.getX() < position.getX()) directionList.add(WEST);
         if (destination.getX() > position.getX()) directionList.add(Direction.EAST);
