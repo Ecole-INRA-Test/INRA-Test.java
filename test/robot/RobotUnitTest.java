@@ -16,11 +16,12 @@ import static robot.Direction.*;
 public class RobotUnitTest {
 
     @Test
-    public void testLand() throws UnlandedRobotException {
+    public void testLand() throws UnlandedRobotException, LandSensorDefaillance {
         //---DEFINE---
         Robot robot = new Robot(1.0, new Battery());
+        LandSensor sensor = Mockito.mock(LandSensor.class);
         //---WHEN---
-        robot.land(new Coordinates(3, 0), null);
+        robot.land(new Coordinates(3, 0), sensor);
         //---THEN---
         Assert.assertEquals(NORTH, robot.getDirection());
         Assert.assertEquals(3, robot.getXposition());
@@ -141,7 +142,8 @@ public class RobotUnitTest {
         when(cells.canDeliver(anyDouble())).thenReturn(true);
         doNothing().when(cells).use(anyDouble());
         Robot robot = new Robot(1.0, cells);
-        robot.land(new Coordinates(3, 0), null);
+        LandSensor sensor = mock(LandSensor.class);
+        robot.land(new Coordinates(3, 0), sensor);
         robot.turnRight();
         Assert.assertEquals(EAST, robot.getDirection());
         robot.turnRight();
@@ -184,8 +186,10 @@ public class RobotUnitTest {
     public void testComputeRoadTo() throws Exception {
         //TODO
         Robot robot = new Robot(1.0, new Battery());
-        landNoEnergyConsumeRobot(robot);
-        robot.computeRoadTo(new Coordinates(0, -6));
+        LandSensor sensor = mock(LandSensor.class);
+        when(sensor.getPointToPointEnergyCoefficient(any(Coordinates.class), any(Coordinates.class))).thenReturn(1.0);
+        robot.land(new Coordinates(3, 0), sensor);
+        robot.computeRoadTo(new Coordinates(0, -3));
         robot.letsGo();
         Assert.assertEquals(0, robot.getXposition());
         Assert.assertEquals(-6, robot.getYposition());

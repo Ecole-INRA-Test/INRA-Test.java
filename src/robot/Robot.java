@@ -27,12 +27,13 @@ public class Robot {
         blackBox = new BlackBox();
     }
 
-    public void land(Coordinates landPosition, LandSensor sensor) {
+    public void land(Coordinates landPosition, LandSensor sensor) throws LandSensorDefaillance {
         position = landPosition;
         direction = NORTH;
         isLanded = true;
         landSensor = sensor;
         cells.setUp();
+        sensor.cartographier(landPosition);
         blackBox.addCheckPoint(position, direction, true);
     }
 
@@ -99,7 +100,7 @@ public class Robot {
             else if (nextInstruction == BACKWARD) moveBackward();
             else if (nextInstruction == TURNLEFT) turnLeft();
             else if (nextInstruction == TURNRIGHT) turnRight();
-            CheckPoint checkPoint = new CheckPoint(position, direction, true);
+            CheckPoint checkPoint = new CheckPoint(position, direction, false);
             mouchard.add(checkPoint);
             blackBox.addCheckPoint(checkPoint);
         }

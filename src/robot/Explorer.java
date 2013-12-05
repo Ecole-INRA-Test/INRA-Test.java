@@ -19,7 +19,8 @@ public class Explorer {
         Scanner scanner = new Scanner(System.in);
         double energy = scanner.nextDouble();
         Robot robot = new Robot(energy, new Battery());
-        while (true) {
+        boolean quitter = false;
+        while (!quitter) {
             displayMenu();
             String commande;
             do {
@@ -28,13 +29,14 @@ public class Explorer {
             switch (commande.charAt(0)) {
                 case 'A':
                     System.out.println("coordonnées x,y de dépose du robot");
-                    int x = scanner.nextInt();
-                    int y = scanner.nextInt();
-                    robot.land(new Coordinates(x, y), new LandSensor(new Random(10)));
+                    Coordinates coord = lireCoordonnee(scanner);
                     try {
+                        robot.land(coord, new LandSensor(new Random(10)));
                         System.out.println("Position actuelle : (" + robot.getXposition() + " ," + robot.getYposition() + ") - orientation : " + robot.getDirection());
                     } catch (UnlandedRobotException e) {
                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    } catch (LandSensorDefaillance landSensorDefaillance) {
+                        landSensorDefaillance.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     }
                     break;
                 case 'Z':
@@ -80,7 +82,7 @@ public class Explorer {
                 case 'D':
                     try {
                         robot.turnRight();
-                        System.out.println("Position actuelle : (" + robot.getXposition() + " ," + robot.getYposition() + ") - orientation : " + robot.getDirection());
+                        System.out.println("Position actuelle : (" + robot.getXposition() + ", " + robot.getYposition() + ") - orientation : " + robot.getDirection());
                     } catch (UnlandedRobotException e) {
                         System.out.println("Le robot est encore en l'air, il doit se poser d'abord");
                     } catch (InsufficientChargeException e) {
@@ -89,10 +91,9 @@ public class Explorer {
                     break;
                 case 'M':
                     System.out.println("coordonnées x,y de la destination");
-                    int destx = scanner.nextInt();
-                    int desty = scanner.nextInt();
+                    Coordinates destination = lireCoordonnee(scanner);
                     try {
-                        robot.computeRoadTo(new Coordinates(destx, desty));
+                        robot.computeRoadTo(destination);
                     } catch (UnlandedRobotException e) {
                         System.out.println("Impossible d'établir une route, le robot est encore en l'air");
                         break;
@@ -116,12 +117,37 @@ public class Explorer {
                         displayBlackBox(robot.blackBox);
                     } catch (LandSensorDefaillance landSensorDefaillance) {
                         System.out.println("Allo Houston, on a un problème. On a perdu le retour sol");
+                        displayBlackBox(robot.blackBox);
                     } catch (InaccessibleCoordinate inaccessibleCoordinate) {
                         System.out.println("Je suis malheureusement dans l'impossibilité de rejoindre la destination demandée");
+                        displayBlackBox(robot.blackBox);
                     }
+                    break;
+                case 'X':
+                    quitter = true;
             }
         }
     }
+
+    static Coordinates lireCoordonnee(Scanner scanner) {
+        boolean conforme;
+        int x = 0;
+        int y = 0;
+        do {
+            conforme = true;
+            String line = scanner.nextLine();
+            String[] tokens = line.replace("(", "").replace(")", "").split(",");
+            if (tokens.length != 2) conforme = false;
+            try {
+                x = Integer.valueOf(tokens[0].trim());
+                y = Integer.valueOf(tokens[1].trim());
+            } catch (NumberFormatException e) {
+                conforme = false;
+            }
+        } while (!conforme);
+        return new Coordinates(x, y);
+    }
+
 
     private static void displayBlackBox(BlackBox blackBox) {
         System.out.println("Contenu de la boite noire");
@@ -138,6 +164,7 @@ public class Explorer {
         System.out.println("D : tourner à droite");
         System.out.println("S : reculer");
         System.out.println("M : donner une coordonnée à atteindre");
+        System.out.println("X : Quitter");
 
     }
 }
