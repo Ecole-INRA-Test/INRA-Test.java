@@ -18,7 +18,7 @@ public class BatteryUnitTest {
         Battery cell = new Battery();
         Assert.assertEquals(100f, cell.getChargeLevel());
         cell.charge();
-        Assert.assertEquals(100f+cell.CHARGE_STEP, cell.getChargeLevel());
+        Assert.assertEquals(110f, cell.getChargeLevel());
     }
 
     @Ignore
@@ -27,10 +27,10 @@ public class BatteryUnitTest {
         Battery cell = new Battery();
         Assert.assertEquals(100f, cell.getChargeLevel());
         cell.setUp();
-        Thread.sleep(cell.CHARGE_TOP);
-        Assert.assertEquals(100f+cell.CHARGE_STEP, cell.getChargeLevel());
-        Thread.sleep(cell.CHARGE_TOP);
-        Assert.assertEquals(100f+2*cell.CHARGE_STEP, cell.getChargeLevel());
+        Thread.sleep(1000);
+        Assert.assertEquals(110f, cell.getChargeLevel());
+        Thread.sleep(1000);
+        Assert.assertEquals(120f, cell.getChargeLevel());
     }
 
     @Test (expected = InsufficientChargeException.class)

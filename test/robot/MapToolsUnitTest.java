@@ -1,12 +1,11 @@
 package robot;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static robot.Direction.*;
 
 public class MapToolsUnitTest {
-
     @Test
     public void testNextForwardPositionNorth() {
         Coordinates position = MapTools.nextForwardPosition(new Coordinates(0, 0), NORTH);
@@ -79,5 +78,5 @@ public class MapToolsUnitTest {
         Assert.assertEquals(EAST, MapTools.clockwise(NORTH));
     }
 
-}
 
+}

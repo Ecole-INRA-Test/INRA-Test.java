@@ -1,7 +1,6 @@
 package robot;
 
-import apple.laf.JRSUIConstants;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +10,6 @@ import static robot.Direction.*;
 import static robot.RoadBookCalculator.calculateRoadBook;
 
 public class RoadBookCalculatorUnitTest {
-
     RoadBook book;
     Coordinates startPosition;
     ArrayList<Instruction> instructions;
