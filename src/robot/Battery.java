@@ -1,8 +1,5 @@
 package robot;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class Battery {
 
     public final long CHARGE_TOP = 1000;
