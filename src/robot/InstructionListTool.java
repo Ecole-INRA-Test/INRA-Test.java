@@ -7,7 +7,7 @@ import static robot.Instruction.TURNLEFT;
 import static robot.Instruction.TURNRIGHT;
 
 public class InstructionListTool {
-     static List<Instruction> compacte(ArrayList<Instruction> instructions) {
+     static List<Instruction> compacte(List<Instruction> instructions) {
         int cpt = 0;
         List<Instruction> copieCompacte = new ArrayList<Instruction>();
         for (int i = 0; i < instructions.size(); i++) {
@@ -31,4 +31,10 @@ public class InstructionListTool {
         }
         return copieCompacte;
     }
+
+    static <T> List<T> concatene(List<T> trace, T coordinates) {
+       ArrayList<T> coordonnees = new ArrayList<T>(trace);
+       coordonnees.add(coordinates);
+       return coordonnees;
+   }
 }

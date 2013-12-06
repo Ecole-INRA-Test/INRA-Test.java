@@ -45,6 +45,7 @@ public class LandSensorUnitTest {
         Mockito.when(random.nextInt()).thenReturn(1234);
         Mockito.when(random.nextInt(anyInt())).thenReturn(0, 1, 2, 3);
         LandSensor sensor = new LandSensor(random);
+        sensor.cartographier(new Coordinates(0,0));
         Assert.assertTrue(sensor.isAccessible(new Coordinates(0,0)));
         Assert.assertTrue(sensor.isAccessible(new Coordinates(0,1)));
         Assert.assertTrue(sensor.isAccessible(new Coordinates(0,2)));

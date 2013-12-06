@@ -89,6 +89,17 @@ public class Explorer {
                         System.out.println("Oups, piles vides... soyez patient, le soleil fait son oeuvre");
                     }
                     break;
+                case 'L':
+                    try {
+                        robot.cartographier();
+                    } catch (LandSensorDefaillance landSensorDefaillance) {
+                        System.out.println("Impossible d'établir une cartographie");
+                        break;
+                    }
+                    for (String ligne : robot.carte()) {
+                        System.out.println(ligne);
+                    }
+
                 case 'M':
                     System.out.println("coordonnées x,y de la destination");
                     Coordinates destination = lireCoordonnee(scanner);
@@ -163,6 +174,7 @@ public class Explorer {
         System.out.println("Q : tourner à gauche");
         System.out.println("D : tourner à droite");
         System.out.println("S : reculer");
+        System.out.println("L : cartographier autour du robot");
         System.out.println("M : donner une coordonnée à atteindre");
         System.out.println("X : Quitter");
 

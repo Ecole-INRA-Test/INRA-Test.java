@@ -109,7 +109,14 @@ public class Robot {
 
     public void computeRoadTo(Coordinates destination) throws UnlandedRobotException, LandSensorDefaillance, UndefinedRoadbookException {
         if (!isLanded) throw new UnlandedRobotException();
-        setRoadBook(calculateRoadBook(landSensor, direction, position, destination, new ArrayList<Instruction>()));
+        setRoadBook(calculateRoadBook(landSensor, direction, position, destination, new ArrayList<Instruction>(), new ArrayList<Coordinates>()));
     }
 
+    public void cartographier() throws LandSensorDefaillance {
+        landSensor.cartographier(position);
+    }
+
+    public List<String> carte() {
+        return landSensor.carte();
+    }
 }

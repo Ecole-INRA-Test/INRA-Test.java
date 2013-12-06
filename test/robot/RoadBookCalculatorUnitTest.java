@@ -1,13 +1,12 @@
 package robot;
 
-import apple.laf.JRSUIConstants;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import javax.management.relation.RelationNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import static org.mockito.Matchers.any;
@@ -125,7 +124,7 @@ public class RoadBookCalculatorUnitTest {
         when(sensor.isAccessible(new Coordinates(2,-3))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(2,-3))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(5,-2))).thenReturn(false);
-        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions, Collections.EMPTY_LIST);
         while (book.hasInstruction()) {
             System.out.println(book.next().toString());
         }
@@ -136,7 +135,7 @@ public class RoadBookCalculatorUnitTest {
         when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
         when(sensor.isAccessible(new Coordinates(1,0))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(5,-2))).thenReturn(false);
-        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions, Collections.EMPTY_LIST);
         while (book.hasInstruction()) {
             System.out.println(book.next().toString());
         }
@@ -158,7 +157,7 @@ public class RoadBookCalculatorUnitTest {
         when(sensor.isAccessible(new Coordinates(2,-1))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(0,0))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(2,0))).thenReturn(false);
-        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions, Collections.EMPTY_LIST);
         while (book.hasInstruction()) {
             System.out.println(book.next().toString());
         }
@@ -170,7 +169,7 @@ public class RoadBookCalculatorUnitTest {
         when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
         closeCarte(sensor, startPosition);
         when(sensor.isAccessible(new Coordinates(0,0))).thenReturn(false);
-        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(0,0), instructions);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(0,0), instructions, Collections.EMPTY_LIST);
         while (book.hasInstruction()) {
             System.out.println(book.next().toString());
         }
@@ -181,7 +180,7 @@ public class RoadBookCalculatorUnitTest {
         LandSensor sensor = mock(LandSensor.class);
         when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
         closeCarte(sensor, startPosition);
-        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(10,10), instructions);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(10,10), instructions, Collections.EMPTY_LIST);
         while (book.hasInstruction()) {
             System.out.println(book.next().toString());
         }
@@ -194,10 +193,26 @@ public class RoadBookCalculatorUnitTest {
         when(sensor.isAccessible(new Coordinates(3,-1))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(2,-2))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(4,-1))).thenReturn(false);
-        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(3,-2), instructions);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(3,-2), instructions, Collections.EMPTY_LIST);
         while (book.hasInstruction()) {
             System.out.println(book.next().toString());
         }
+    }
+
+    @Test (expected = UndefinedRoadbookException.class)
+    public void test() throws LandSensorDefaillance, UndefinedRoadbookException {
+        LandSensor sensor = mock(LandSensor.class);
+        when(sensor.isAccessible(any(Coordinates.class))).thenReturn(false);
+        closeCarte(sensor, startPosition);
+        when(sensor.isAccessible(new Coordinates(1,0))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(1,-1))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(1,-2))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(2,-2))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(3,-2))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(3,-1))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(3,0))).thenReturn(true);
+        when(sensor.isAccessible(new Coordinates(2,0))).thenReturn(true);
+        calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions, Collections.EMPTY_LIST);
     }
 
     private void closeCarte(LandSensor sensor, Coordinates startPosition) throws LandSensorDefaillance {
@@ -209,8 +224,6 @@ public class RoadBookCalculatorUnitTest {
             when(sensor.isAccessible(new Coordinates(startPosition.getX()-4, i))).thenReturn(false);
             when(sensor.isAccessible(new Coordinates(startPosition.getX()+4, i))).thenReturn(false);
         }
-
-        //To change body of created methods use File | Settings | File Templates.
     }
 
     @Test (expected = LandSensorDefaillance.class)
@@ -226,7 +239,7 @@ public class RoadBookCalculatorUnitTest {
         when(sensor.isAccessible(new Coordinates(5,-6))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(6,-6))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(5,-5))).thenReturn(false);
-        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions, Collections.EMPTY_LIST);
 
     }
 
@@ -235,7 +248,7 @@ public class RoadBookCalculatorUnitTest {
 
         LandSensor sensor = new LandSensor(new Random(10));
         sensor.cartographier(new Coordinates(0,0));
-        book = calculateRoadBook(sensor, NORTH, new Coordinates(0,0), new Coordinates(1,1), instructions);
+        book = calculateRoadBook(sensor, NORTH, new Coordinates(0,0), new Coordinates(1,1), instructions, Collections.EMPTY_LIST);
         while (book.hasInstruction()) {
             System.out.println(book.next().toString());
         }
@@ -246,7 +259,7 @@ public class RoadBookCalculatorUnitTest {
 
         LandSensor sensor = new LandSensor(new Random(50));
         sensor.cartographier(new Coordinates(0,0));
-        book = calculateRoadBook(sensor, NORTH, new Coordinates(0,0), new Coordinates(0,1), instructions);
+        book = calculateRoadBook(sensor, NORTH, new Coordinates(0,0), new Coordinates(0,1), instructions, Collections.EMPTY_LIST);
         while (book.hasInstruction()) {
             System.out.println(book.next().toString());
         }
@@ -256,10 +269,12 @@ public class RoadBookCalculatorUnitTest {
         LandSensor sensor = new LandSensor(new Random(50));
         sensor.cartographier(new Coordinates(0,0));
 
-        book = calculateRoadBook(sensor, NORTH, new Coordinates(0,0), new Coordinates(0,-1), instructions);
+        book = calculateRoadBook(sensor, NORTH, new Coordinates(0,0), new Coordinates(0,-1), instructions, Collections.EMPTY_LIST);
         while (book.hasInstruction()) {
             System.out.println(book.next().toString());
         }
     }
+
+
 
 }

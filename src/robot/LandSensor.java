@@ -66,6 +66,7 @@ public class LandSensor {
 
     public List<String> carte() {
         List<String> grille = new ArrayList<String>();
+        grille.add(boxTop + "<->"+ boxBottom);
         for (int i = boxTop.getX(); i < boxBottom.getX() + 1; i++) {
             StringBuilder ligne = new StringBuilder();
             ligne.append(i).append("\t|\t");
@@ -95,6 +96,10 @@ public class LandSensor {
             }
             grille.add(ligne.toString());
         }
+        StringBuilder builder = new StringBuilder();
+        builder.append("Légende : ").append("Infranchissable ").append((char)684).append("\tRoche ").append((char)734);
+        builder.append("\tBoue ").append('~').append("\tSable ").append((char)748).append("\tTerre ").append((char)685);
+        grille.add(builder.toString());
         return grille;
     }
 }
