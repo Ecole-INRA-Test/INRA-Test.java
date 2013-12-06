@@ -28,7 +28,7 @@ public class Explorer {
             } while (commande.length() != 1);
             switch (commande.charAt(0)) {
                 case 'A':
-                    System.out.println("coordonnées x,y de dépose du robot");
+                    System.out.println("coordonnées colonne,ligne de dépose du robot");
                     Coordinates coord = lireCoordonnee(scanner);
                     try {
                         robot.land(coord, new LandSensor(new Random(10)));
@@ -95,13 +95,15 @@ public class Explorer {
                     } catch (LandSensorDefaillance landSensorDefaillance) {
                         System.out.println("Impossible d'établir une cartographie");
                         break;
+                    } catch (UnlandedRobotException e) {
+                        System.out.println("Le robot est encore en l'air, il doit se poser d'abord");
                     }
                     for (String ligne : robot.carte()) {
                         System.out.println(ligne);
                     }
-
+                    break;
                 case 'M':
-                    System.out.println("coordonnées x,y de la destination");
+                    System.out.println("coordonnées colonne,ligne de la destination");
                     Coordinates destination = lireCoordonnee(scanner);
                     try {
                         robot.computeRoadTo(destination);
@@ -148,13 +150,17 @@ public class Explorer {
             conforme = true;
             String line = scanner.nextLine();
             String[] tokens = line.replace("(", "").replace(")", "").split(",");
-            if (tokens.length != 2) conforme = false;
-            try {
-                x = Integer.valueOf(tokens[0].trim());
-                y = Integer.valueOf(tokens[1].trim());
-            } catch (NumberFormatException e) {
+            if (tokens.length != 2) {
                 conforme = false;
+                System.out.println("Format incorrect. c, l ou (c, l)");
             }
+            else
+                try {
+                    x = Integer.valueOf(tokens[0].trim());
+                    y = Integer.valueOf(tokens[1].trim());
+                } catch (NumberFormatException e) {
+                    conforme = false;
+                }
         } while (!conforme);
         return new Coordinates(x, y);
     }

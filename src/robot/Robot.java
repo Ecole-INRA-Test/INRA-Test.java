@@ -112,11 +112,32 @@ public class Robot {
         setRoadBook(calculateRoadBook(landSensor, direction, position, destination, new ArrayList<Instruction>(), new ArrayList<Coordinates>()));
     }
 
-    public void cartographier() throws LandSensorDefaillance {
+    public void cartographier() throws LandSensorDefaillance, UnlandedRobotException {
+        if (!isLanded) throw new UnlandedRobotException();
         landSensor.cartographier(position);
     }
 
     public List<String> carte() {
-        return landSensor.carte();
+        List<String> carteEncadre = new ArrayList<String>();
+        List<String> carte = landSensor.carte();
+        Coordinates top = landSensor.getTop();
+        StringBuilder positionColonne = new StringBuilder();
+        positionColonne.append('\t').append('\t');
+        for (int i = top.getX(); i < position.getX(); i++) {
+            positionColonne.append('\t').append(i);
+        }
+        positionColonne.append('\t').append('\u25BC');
+        for (int i = position.getX() + 1; i <= landSensor.getXBottom(); i++) {
+            positionColonne.append('\t').append(i);
+        }
+        carteEncadre.add(carte.get(0));
+        carteEncadre.add(positionColonne.toString());
+        for (int i = 1; i < carte.size(); i++) {
+            if (top.getY() - 1 + i == position.getY())
+                carteEncadre.add("\u25B6\t" + carte.get(i));
+            else
+                carteEncadre.add("\t" + carte.get(i));
+        }
+        return carteEncadre;
     }
 }

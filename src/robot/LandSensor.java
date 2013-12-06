@@ -67,28 +67,28 @@ public class LandSensor {
     public List<String> carte() {
         List<String> grille = new ArrayList<String>();
         grille.add(boxTop + "<->"+ boxBottom);
-        for (int i = boxTop.getX(); i < boxBottom.getX() + 1; i++) {
+        for (int i = boxTop.getY(); i < boxBottom.getY() + 1; i++) {
             StringBuilder ligne = new StringBuilder();
             ligne.append(i).append("\t|\t");
-            for (int j = boxTop.getY(); j < boxBottom.getY() + 1; j++) {
-                Land land = carte.get(new Coordinates(i, j));
+            for (int j = boxTop.getX(); j < boxBottom.getX() + 1; j++) {
+                Land land = carte.get(new Coordinates(j, i));
                 if (land == null)
                     ligne.append(" |\t");
                 else switch (land) {
                     case Infranchissable:
-                        ligne.append((char)684).append("|\t");
+                        ligne.append("\u2610|\t");
                         break;
                     case Roche:
-                        ligne.append((char)734).append("|\t");
+                        ligne.append("\u203B|\t");
                         break;
                     case Boue:
-                        ligne.append('~').append("|\t");
+                        ligne.append("\u2744|\t");
                         break;
                     case Sable:
-                        ligne.append((char)748).append("|\t");
+                        ligne.append("\u2652|\t");
                         break;
                     case Terre:
-                        ligne.append((char)685).append("|\t");
+                        ligne.append("-|\t");
                         break;
                     default:
                         ligne.append(" |\t");
@@ -97,9 +97,17 @@ public class LandSensor {
             grille.add(ligne.toString());
         }
         StringBuilder builder = new StringBuilder();
-        builder.append("Légende : ").append("Infranchissable ").append((char)684).append("\tRoche ").append((char)734);
-        builder.append("\tBoue ").append('~').append("\tSable ").append((char)748).append("\tTerre ").append((char)685);
+        builder.append("Légende : ").append("Infranchissable ").append('\u2610').append("\tRoche ").append('\u203B');
+        builder.append("\tBoue ").append('\u2744').append("\tSable ").append('\u2652').append("\tTerre ").append('-');
         grille.add(builder.toString());
         return grille;
+    }
+
+    public Coordinates getTop() {
+        return boxTop;
+    }
+
+    public int getXBottom() {
+        return boxBottom.getX();
     }
 }
