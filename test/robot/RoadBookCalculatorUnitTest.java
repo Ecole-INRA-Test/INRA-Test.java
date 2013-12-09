@@ -3,7 +3,6 @@ package robot;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -163,33 +162,31 @@ public class RoadBookCalculatorUnitTest {
         }
     }
 
-    @Test
+    @Test(expected = UndefinedRoadbookException.class)
     public void testArriveeInaccessible() throws LandSensorDefaillance, UndefinedRoadbookException {
         LandSensor sensor = mock(LandSensor.class);
         when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
-        closeCarte(sensor, startPosition);
+        closeCarte(sensor, startPosition, 2);
         when(sensor.isAccessible(new Coordinates(0,0))).thenReturn(false);
-        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(0,0), instructions, Collections.EMPTY_LIST);
-        while (book.hasInstruction()) {
-            System.out.println(book.next().toString());
-        }
+        calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(0,0), instructions, Collections.EMPTY_LIST);
     }
 
-    @Test
+    @Test(expected = UndefinedRoadbookException.class)
     public void testArriveeHorsCarte() throws LandSensorDefaillance, UndefinedRoadbookException {
         LandSensor sensor = mock(LandSensor.class);
-        when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
-        closeCarte(sensor, startPosition);
+        cartographie(sensor, startPosition, 3);
+        verticalFrontier(sensor, startPosition, WEST, 1);
         book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(10,10), instructions, Collections.EMPTY_LIST);
         while (book.hasInstruction()) {
             System.out.println(book.next().toString());
         }
     }
-    @Test
+
+    @Test(expected = UndefinedRoadbookException.class)
     public void testArriveeIsolee() throws LandSensorDefaillance, UndefinedRoadbookException {
         LandSensor sensor = mock(LandSensor.class);
         when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
-        closeCarte(sensor, startPosition);
+        closeCarte(sensor, startPosition, 4);
         when(sensor.isAccessible(new Coordinates(3,-1))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(2,-2))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(4,-1))).thenReturn(false);
@@ -203,7 +200,7 @@ public class RoadBookCalculatorUnitTest {
     public void test() throws LandSensorDefaillance, UndefinedRoadbookException {
         LandSensor sensor = mock(LandSensor.class);
         when(sensor.isAccessible(any(Coordinates.class))).thenReturn(false);
-        closeCarte(sensor, startPosition);
+        closeCarte(sensor, startPosition, 4);
         when(sensor.isAccessible(new Coordinates(1,0))).thenReturn(true);
         when(sensor.isAccessible(new Coordinates(1,-1))).thenReturn(true);
         when(sensor.isAccessible(new Coordinates(1,-2))).thenReturn(true);
@@ -215,14 +212,37 @@ public class RoadBookCalculatorUnitTest {
         calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(5,-5), instructions, Collections.EMPTY_LIST);
     }
 
-    private void closeCarte(LandSensor sensor, Coordinates startPosition) throws LandSensorDefaillance {
-        for (int i = startPosition.getX()-4; i < startPosition.getX()+5 ; i++) {
-            when(sensor.isAccessible(new Coordinates(i, startPosition.getY()-4))).thenReturn(false);
-            when(sensor.isAccessible(new Coordinates(i, startPosition.getY()+4))).thenReturn(false);
+
+    private void cartographie(LandSensor sensor, Coordinates startPosition, int distance) {
+        for (int i = startPosition.getX()- distance; i < startPosition.getX()+ distance +1 ; i++) {
+            for (int j = startPosition.getY()-distance; j < startPosition.getY() + distance + 1; j++) {
+                when(sensor.isAccessible(new Coordinates(i,j))).thenReturn(true);
+            }
         }
-        for (int i = startPosition.getY()-3; i < startPosition.getX()+4 ; i++) {
-            when(sensor.isAccessible(new Coordinates(startPosition.getX()-4, i))).thenReturn(false);
-            when(sensor.isAccessible(new Coordinates(startPosition.getX()+4, i))).thenReturn(false);
+
+    }
+
+
+    private void verticalFrontier(LandSensor sensor, Coordinates startPosition, Direction direction, int distance) {
+        if (direction==WEST)
+        for (int i = startPosition.getY()-4; i < startPosition.getY()+ 5; i++) {
+            when(sensor.isAccessible(new Coordinates(startPosition.getX()- distance, i))).thenReturn(false);
+        }
+        else
+            for (int i = startPosition.getY()-(4); i < startPosition.getY()+ 5; i++) {
+                when(sensor.isAccessible(new Coordinates(startPosition.getX()+ distance, i))).thenReturn(false);
+            }
+
+    }
+
+    private void closeCarte(LandSensor sensor, Coordinates startPosition, int distance) throws LandSensorDefaillance {
+        for (int i = startPosition.getX()- distance; i < startPosition.getX()+ distance +1 ; i++) {
+            when(sensor.isAccessible(new Coordinates(i, startPosition.getY()- distance))).thenReturn(false);
+            when(sensor.isAccessible(new Coordinates(i, startPosition.getY()+ distance))).thenReturn(false);
+        }
+        for (int i = startPosition.getY()-(distance -1); i < startPosition.getY()+ distance; i++) {
+            when(sensor.isAccessible(new Coordinates(startPosition.getX()- distance, i))).thenReturn(false);
+            when(sensor.isAccessible(new Coordinates(startPosition.getX()+ distance, i))).thenReturn(false);
         }
     }
 
