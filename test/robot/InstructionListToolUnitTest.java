@@ -27,4 +27,10 @@ public class InstructionListToolUnitTest {
         ArrayList<Instruction> instructions = new ArrayList<Instruction>(Arrays.asList(FORWARD, TURNRIGHT,FORWARD, TURNRIGHT,TURNRIGHT, BACKWARD, FORWARD, FORWARD, FORWARD));
         Assert.assertEquals(instructions, InstructionListTool.compacte(instructions));
     }
+
+    @Test
+    public void testCompacteTurnRightSeul() {
+        ArrayList<Instruction> instructions = new ArrayList<Instruction>(Arrays.asList(TURNRIGHT));
+        Assert.assertEquals(instructions, InstructionListTool.compacte(instructions));
+    }
 }
