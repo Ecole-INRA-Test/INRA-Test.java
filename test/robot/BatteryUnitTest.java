@@ -53,9 +53,5 @@ public class BatteryUnitTest {
         Assert.assertEquals(0f, cell.getChargeLevel());
     }
 
-    @Test
-    public void testTimeToSufficientCharge() {
-        Battery cell = new Battery();
-        Assert.assertEquals(10000,cell.timeToSufficientCharge(200));
-    }
+
 }

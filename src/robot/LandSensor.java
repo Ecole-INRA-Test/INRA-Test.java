@@ -4,7 +4,7 @@ import java.util.*;
 
 public class LandSensor {
 
-    private Map<Coordinates, Land> carte;
+    protected Map<Coordinates, Land> carte;
     private Coordinates boxTop;
     private Coordinates boxBottom;
 
