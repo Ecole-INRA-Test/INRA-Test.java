@@ -30,6 +30,7 @@ public class InstructionListToolUnitTest {
 
     @Test
     public void testCompacteTurnRightSeul() {
+        // Ce test constate que compacte contient une erreur (la liste, si elle ne comporte qu'une instructions TURNRIGHT, est vidée)
         ArrayList<Instruction> instructions = new ArrayList<Instruction>(Arrays.asList(TURNRIGHT));
         Assert.assertEquals(instructions, InstructionListTool.compacte(instructions));
     }

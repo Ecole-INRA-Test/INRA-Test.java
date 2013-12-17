@@ -140,4 +140,8 @@ public class Robot {
         }
         return carteEncadre;
     }
+
+    public RoadBook getRoadBook() {
+        return roadBook;
+    }
 }
