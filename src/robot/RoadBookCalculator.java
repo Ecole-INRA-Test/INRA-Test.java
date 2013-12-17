@@ -4,6 +4,7 @@ import java.util.*;
 
 import static robot.Direction.*;
 import static robot.Instruction.*;
+import static robot.InstructionListTool.concatene;
 import static robot.MapTools.clockwise;
 import static robot.MapTools.nextForwardPosition;
 
@@ -27,47 +28,36 @@ public class RoadBookCalculator {
 
     static RoadBook calculateRoadBook(LandSensor sensor, Direction direction, Coordinates position, Coordinates destination, List<Instruction> instructions, List<Coordinates> trace) throws LandSensorDefaillance, UndefinedRoadbookException {
         if (position.equals(destination)) return new RoadBook(InstructionListTool.compacte(instructions));
-        List<Direction> directionList = new ArrayList<Direction>();
-        if (destination.getX() < position.getX()) directionList.add(WEST);
-        if (destination.getX() > position.getX()) directionList.add(Direction.EAST);
-        if (destination.getY() > position.getY()) directionList.add(Direction.SOUTH);
-        if (destination.getY() < position.getY()) directionList.add(Direction.NORTH);
+        List<Direction> privilegeDirections = new ArrayList<Direction>();
+        if (destination.getX() < position.getX()) privilegeDirections.add(WEST);
+        if (destination.getX() > position.getX()) privilegeDirections.add(Direction.EAST);
+        if (destination.getY() > position.getY()) privilegeDirections.add(Direction.SOUTH);
+        if (destination.getY() < position.getY()) privilegeDirections.add(Direction.NORTH);
         List<Direction> directionsToExplored = new ArrayList<Direction>(Arrays.asList(NORTH, SOUTH, EAST, WEST));
         directionsToExplored.remove(Direction.oppositeDirection(direction));
-        directionList.remove(Direction.oppositeDirection(direction));
+        privilegeDirections.remove(Direction.oppositeDirection(direction));
+        System.out.println(trace.size() + " "+instructions);
         while (!directionsToExplored.isEmpty()) {
-            if (directionList.contains(direction) && sensor.isAccessible(nextForwardPosition(position, direction)) && !trace.contains(nextForwardPosition(position,direction))) {
-                try {
-                    directionsToExplored.remove(direction);
-                    directionList.remove(direction);
-                    Coordinates nextPos = nextForwardPosition(position, direction);
-                    return calculateRoadBook(sensor, direction, nextPos, destination, InstructionListTool.concatene(instructions, FORWARD), InstructionListTool.concatene(trace, nextPos));
-                } catch (UndefinedRoadbookException e) {
-                }
-            } else if (directionList.contains(direction)) { // !sensor.isAccessible(nextForwardPosition(position, direction)
-                directionsToExplored.remove(direction);
-                directionList.remove(direction);
-                instructions.add(TURNRIGHT);
-                direction = clockwise(direction);
-            } else if (!directionList.isEmpty()) {
-                instructions.add(TURNRIGHT);
-                direction = clockwise(direction);
-            } else if (directionList.isEmpty() && directionsToExplored.contains(direction) && sensor.isAccessible(nextForwardPosition(position, direction)) &&!trace.contains(nextForwardPosition(position,direction))) {
-                try {
+            if (privilegeDirections.contains(direction) || privilegeDirections.isEmpty()) {
+                privilegeDirections.remove(direction);
+                if (directionsToExplored.contains(direction)) {
                     directionsToExplored.remove(direction);
                     Coordinates nextPos = nextForwardPosition(position, direction);
-                    return calculateRoadBook(sensor, direction, nextPos, destination, InstructionListTool.concatene(instructions, FORWARD), InstructionListTool.concatene(trace, nextPos));
-                } catch (UndefinedRoadbookException e) {
+                    if (sensor.isAccessible(nextPos) && !trace.contains(nextPos)) {
+                        try {
+                            return calculateRoadBook(sensor, direction, nextPos, destination, concatene(instructions, FORWARD), concatene(trace, nextPos));
+                        } catch (UndefinedRoadbookException e) {
+                            System.out.println("---> BackTrack");
+                        }
+                    }
                 }
-            } else if (directionList.isEmpty() && directionsToExplored.contains(direction)) {
-                directionsToExplored.remove(direction);
-                instructions.add(TURNRIGHT);
-                direction = clockwise(direction);
-            } else if (directionList.isEmpty()) {
-                instructions.add(TURNRIGHT);
-                direction = clockwise(direction);
             }
+
+            instructions.add(TURNRIGHT);
+            direction = clockwise(direction);
+
         }
+
         throw new UndefinedRoadbookException();
     }
 
