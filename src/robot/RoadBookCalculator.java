@@ -28,15 +28,10 @@ public class RoadBookCalculator {
 
     static RoadBook calculateRoadBook(LandSensor sensor, Direction direction, Coordinates position, Coordinates destination, List<Instruction> instructions, List<Coordinates> trace) throws LandSensorDefaillance, UndefinedRoadbookException {
         if (position.equals(destination)) return new RoadBook(InstructionListTool.compacte(instructions));
-        List<Direction> privilegeDirections = new ArrayList<Direction>();
-        if (destination.getX() < position.getX()) privilegeDirections.add(WEST);
-        if (destination.getX() > position.getX()) privilegeDirections.add(Direction.EAST);
-        if (destination.getY() > position.getY()) privilegeDirections.add(Direction.SOUTH);
-        if (destination.getY() < position.getY()) privilegeDirections.add(Direction.NORTH);
+        List<Direction> privilegeDirections = computePrivilegeDirection(position, destination);
         List<Direction> directionsToExplored = new ArrayList<Direction>(Arrays.asList(NORTH, SOUTH, EAST, WEST));
         directionsToExplored.remove(Direction.oppositeDirection(direction));
         privilegeDirections.remove(Direction.oppositeDirection(direction));
-        System.out.println(trace.size() + " "+instructions);
         while (!directionsToExplored.isEmpty()) {
             if (privilegeDirections.contains(direction) || privilegeDirections.isEmpty()) {
                 privilegeDirections.remove(direction);
@@ -47,7 +42,6 @@ public class RoadBookCalculator {
                         try {
                             return calculateRoadBook(sensor, direction, nextPos, destination, concatene(instructions, FORWARD), concatene(trace, nextPos));
                         } catch (UndefinedRoadbookException e) {
-                            System.out.println("---> BackTrack");
                         }
                     }
                 }
@@ -59,6 +53,15 @@ public class RoadBookCalculator {
         }
 
         throw new UndefinedRoadbookException();
+    }
+
+    private static List<Direction> computePrivilegeDirection(Coordinates position, Coordinates destination) {
+        List<Direction> privilegeDirections = new ArrayList<Direction>();
+        if (destination.getX() < position.getX()) privilegeDirections.add(WEST);
+        if (destination.getX() > position.getX()) privilegeDirections.add(Direction.EAST);
+        if (destination.getY() > position.getY()) privilegeDirections.add(Direction.SOUTH);
+        if (destination.getY() < position.getY()) privilegeDirections.add(Direction.NORTH);
+        return privilegeDirections;
     }
 
 
