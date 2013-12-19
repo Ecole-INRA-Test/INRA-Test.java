@@ -12,16 +12,13 @@ une version intégrant les éléments de cartographie et d'énergie (Step-2, Ste
 
 
 Step0 : version initiale utilisée lors de le première phase de l'atelier Test Unitaire en Java
-
 Step1 : version à laquelle nous pourrions aboutir en fin de première séance (Step0 plus test et refactoring)
 
 
 Step-2 : version mettant côte à côte les tests de Step1 et un source du robot intégrant la gestion de l'énergie et de 
 la cartographie. Telle que, cela ne compile pas, il faut commencer par une phase de mise à niveau des tests avant de pouvoir 
 continuer.
-
 Step-3 : version de Step-2 intégrant des tests unitaires sur les éléments ajoutés
-
 Step-4 : version de Step-3 avec un refactoring de RoadBookCalculator
 
 
