@@ -4,16 +4,33 @@ import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+/**
+ * Created with IntelliJ IDEA.
+ * User: fabrice
+ * Date: 26/08/13
+ * Time: 14:13
+ * To change this template use File | Settings | File Templates.
+ */
 public class BatteryUnitTest {
 
     @Test
-    public void testCharge() throws InterruptedException {
+    public void testCharge() {
         Battery cell = new Battery();
-        cell.setUp();
         Assert.assertEquals(100f, cell.getChargeLevel());
-        Thread.sleep(1000);
         cell.charge();
-        Assert.assertEquals(100f + cell.CHARGE_STEP, cell.getChargeLevel());
+        Assert.assertEquals(111f, cell.getChargeLevel());
+    }
+
+    @Ignore
+    @Test
+    public void testSetup() throws InterruptedException {
+        Battery cell = new Battery();
+        Assert.assertEquals(100f, cell.getChargeLevel());
+        cell.setUp();
+        Thread.sleep(1000);
+        Assert.assertEquals(111f, cell.getChargeLevel());
+        Thread.sleep(1000);
+        Assert.assertEquals(123.100006f, cell.getChargeLevel());
     }
 
     @Test (expected = InsufficientChargeException.class)
@@ -37,9 +54,8 @@ public class BatteryUnitTest {
     }
 
     @Test
-    public void testCanDeliver() {
+    public void testTimeToSufficientCharge() {
         Battery cell = new Battery();
-        Assert.assertTrue(cell.canDeliver(25));
-        Assert.assertFalse(cell.canDeliver(200));
+        Assert.assertEquals(7000,cell.timeToSufficientCharge(200));
     }
 }
