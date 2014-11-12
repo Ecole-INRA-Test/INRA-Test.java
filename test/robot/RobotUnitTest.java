@@ -188,10 +188,11 @@ public class RobotUnitTest {
         Robot robot = new Robot(1.0, new Battery());
         LandSensor sensor = mock(LandSensor.class);
         when(sensor.getPointToPointEnergyCoefficient(any(Coordinates.class), any(Coordinates.class))).thenReturn(1.0);
+        when(sensor.isAccessible(any(Coordinates.class))).thenReturn(true);
         robot.land(new Coordinates(3, 0), sensor);
         robot.computeRoadTo(new Coordinates(0, -3));
         robot.letsGo();
         Assert.assertEquals(0, robot.getXposition());
-        Assert.assertEquals(-6, robot.getYposition());
+        Assert.assertEquals(-3, robot.getYposition());
     }
 }

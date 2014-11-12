@@ -1,6 +1,7 @@
 package robot;
 
 import junit.framework.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -79,6 +80,7 @@ public class LandSensorUnitTest {
         }
     }
 
+    @Ignore
     @Test
     public void test() {
         for (int i = 10; i <1000 ; i++) {

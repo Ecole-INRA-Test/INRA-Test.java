@@ -1,8 +1,6 @@
 package robot;
 
-import junit.framework.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.*;
 
@@ -26,6 +24,12 @@ public class RoadBookCalculatorUnitTest {
         book = null;
         startPosition = new Coordinates(1, 1);
         instructions = new ArrayList<Instruction>();
+    }
+
+    @After
+    public void tearDown() {
+        instructions.clear();
+        book = null;
     }
 
 
@@ -221,7 +225,7 @@ public class RoadBookCalculatorUnitTest {
         when(sensor.isAccessible(any(Coordinates.class))).thenReturn(false);
         for (int i = startPosition.getX() - distance; i < startPosition.getX() + distance + 1; i++) {
             for (int j = startPosition.getY() - distance; j < startPosition.getY() + distance + 1; j++) {
-                when(sensor.isAccessible(new Coordinates(i, j))).thenReturn(true);
+                when(sensor.isAccessible(new Coordinates(i, j))).thenReturn(false);
             }
         }
 
