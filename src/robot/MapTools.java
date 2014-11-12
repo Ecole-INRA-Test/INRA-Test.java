@@ -6,9 +6,9 @@ public class MapTools {
 
     static Coordinates nextForwardPosition(Coordinates position, Direction direction) {
         if (direction == NORTH)
-            return new Coordinates(position.getX(), position.getY() - 1);
-        if (direction == SOUTH)
             return new Coordinates(position.getX(), position.getY() + 1);
+        if (direction == SOUTH)
+            return new Coordinates(position.getX(), position.getY() - 1);
         if (direction == EAST)
             return new Coordinates(position.getX() + 1, position.getY());
         return new Coordinates(position.getX() - 1, position.getY());
@@ -16,9 +16,9 @@ public class MapTools {
 
     static Coordinates nextBackwardPosition(Coordinates position, Direction direction) {
         if (direction == NORTH)
-            return new Coordinates(position.getX(), position.getY() + 1);
-        if (direction == SOUTH)
             return new Coordinates(position.getX(), position.getY() - 1);
+        if (direction == SOUTH)
+            return new Coordinates(position.getX(), position.getY() + 1);
         if (direction == EAST)
             return new Coordinates(position.getX() - 1, position.getY());
         return new Coordinates(position.getX() + 1, position.getY());
