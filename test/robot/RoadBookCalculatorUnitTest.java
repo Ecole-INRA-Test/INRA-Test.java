@@ -178,7 +178,7 @@ public class RoadBookCalculatorUnitTest {
     @Test(expected = UndefinedRoadbookException.class)
     public void testArriveeInaccessible() throws LandSensorDefaillance, UndefinedRoadbookException {
         LandSensor sensor = mock(LandSensor.class);
-        cartographie(sensor, startPosition, 2);
+        cartographie(sensor, startPosition, 1);
         when(sensor.isAccessible(new Coordinates(0, 0))).thenReturn(false);
         calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(0, 0), instructions, Collections.EMPTY_LIST);
     }
@@ -186,23 +186,37 @@ public class RoadBookCalculatorUnitTest {
     @Test(expected = UndefinedRoadbookException.class)
     public void testArriveeHorsCarte() throws LandSensorDefaillance, UndefinedRoadbookException {
         LandSensor sensor = mock(LandSensor.class);
-        cartographie(sensor, startPosition, 3);
+        cartographie(sensor, startPosition, 2);
         book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(10, 10), instructions, Collections.EMPTY_LIST);
     }
 
     @Test(expected = UndefinedRoadbookException.class)
     public void testArriveeIsolee() throws LandSensorDefaillance, UndefinedRoadbookException {
         LandSensor sensor = mock(LandSensor.class);
-        cartographie(sensor, startPosition, 4);
+        cartographie(sensor, startPosition, 2);
+        when(sensor.isAccessible(new Coordinates(2, 0))).thenReturn(false);
+        when(sensor.isAccessible(new Coordinates(1, -1))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(3, -1))).thenReturn(false);
         when(sensor.isAccessible(new Coordinates(2, -2))).thenReturn(false);
-        when(sensor.isAccessible(new Coordinates(4, -2))).thenReturn(false);
-        when(sensor.isAccessible(new Coordinates(3, -3))).thenReturn(false);
-        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(3, -2), instructions, Collections.EMPTY_LIST);
+        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(2, -1), instructions, Collections.EMPTY_LIST);
         while (book.hasInstruction()) {
             System.out.println(book.next().toString());
         }
     }
+
+//    @Test(expected = UndefinedRoadbookException.class)
+//    public void testArriveeIsolee() throws LandSensorDefaillance, UndefinedRoadbookException {
+//        LandSensor sensor = mock(LandSensor.class);
+//        cartographie(sensor, startPosition, 4);
+//        when(sensor.isAccessible(new Coordinates(3, -1))).thenReturn(false);
+//        when(sensor.isAccessible(new Coordinates(2, -2))).thenReturn(false);
+//        when(sensor.isAccessible(new Coordinates(4, -2))).thenReturn(false);
+//        when(sensor.isAccessible(new Coordinates(3, -3))).thenReturn(false);
+//        book = calculateRoadBook(sensor, NORTH, startPosition, new Coordinates(3, -2), instructions, Collections.EMPTY_LIST);
+//        while (book.hasInstruction()) {
+//            System.out.println(book.next().toString());
+//        }
+//    }
 
     @Test(expected = UndefinedRoadbookException.class)
     public void testArriveeHorsCarteSurCarteReduite() throws LandSensorDefaillance, UndefinedRoadbookException {
@@ -225,7 +239,7 @@ public class RoadBookCalculatorUnitTest {
         when(sensor.isAccessible(any(Coordinates.class))).thenReturn(false);
         for (int i = startPosition.getX() - distance; i < startPosition.getX() + distance + 1; i++) {
             for (int j = startPosition.getY() - distance; j < startPosition.getY() + distance + 1; j++) {
-                when(sensor.isAccessible(new Coordinates(i, j))).thenReturn(false);
+                when(sensor.isAccessible(new Coordinates(i, j))).thenReturn(true);
             }
         }
 
